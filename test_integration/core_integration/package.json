@@ -1,0 +1,13 @@
+{
+  "name": "@kaus/integration-core",
+  "version": "0.0.0",
+  "author": "Juan Ibarra <ibarrajj@gmail.com>",
+  "private": "true",
+  "scripts": {
+    "start": "node -r ts-node/register src/index.ts",
+    "test": "mocha -r ts-node/register test/**/*.spec.ts"
+  },
+  "dependencies": {
+    "@kaus/core": "^0.0.0"
+  }
+}

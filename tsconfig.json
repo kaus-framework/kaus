@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "incremental": true,
+    "target": "ES2015",
+    "module": "commonjs",
+    "allowJs": true,
+    "declaration": true,
+    "sourceMap": false,
+    "outDir": "./dist",
+    "removeComments": false,
+    "strict": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": false,
+    "noUnusedLocals": false,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true
+  },
+  "ts-node": {
+    "transpileOnly": true,
+    "files": true
+  },
+  "include": ["**/*/src/**/*.ts", "**/*/src/**/*.js"],
+  "exclude": ["**/*/node_modules/*", "**/*.d.ts", "**/*.test.ts", "**/*.spec.ts", "**/*.test.js", "**/*.spec.js"]
+}
