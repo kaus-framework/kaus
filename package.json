@@ -4,7 +4,10 @@
   "description": "",
   "author": "Juan Ibarra <ibarrajj@gmail.com>",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "reset": "lerna run clean && echo y | lerna clean && lerna bootstrap && lerna link && lerna run build",
+    "clean:build": "lerna run clean && lerna run build"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kaus-framework/kaus.git"

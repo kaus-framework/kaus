@@ -1,5 +1,5 @@
 {
-  "name": "@kaus/core-integration",
+  "name": "@kaus/express-integration",
   "version": "0.0.0",
   "author": "Juan Ibarra <ibarrajj@gmail.com>",
   "private": true,
@@ -8,6 +8,8 @@
     "test": "mocha -r ts-node/register test/**/*.spec.ts"
   },
   "dependencies": {
-    "@kaus/core": "^0.0.0"
+    "@kaus/core": "^0.0.0",
+    "@kaus/express": "^0.0.0",
+    "@kaus/http": "^0.0.0"
   }
 }
