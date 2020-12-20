@@ -1,0 +1,32 @@
+{
+  "name": "@kaus/socket.io",
+  "version": "0.0.0",
+  "author": "Juan Ibarra <ibarrajj@gmail.com>",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "private": false,
+  "directories": {
+    "dist": "dist"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "tsc",
+    "test": "mocha -r ts-node/register test/**/*.spec.ts"
+  },
+  "dependencies": {
+    "@kaus/core": "^0.0.0",
+    "@kaus/http": "^0.0.0",
+    "bluebird": "^3.7.2",
+    "reflect-metadata": "^0.1.13",
+    "socket.io": "^3.0.4"
+  },
+  "devDependencies": {
+    "@types/bluebird": "^3.5.33"
+  },
+  "kaus": {
+    "registerPath": "dist"
+  }
+}

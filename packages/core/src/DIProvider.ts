@@ -7,11 +7,12 @@ import { getClassName, isGenericObject } from './Utils';
 const log: KLogger = new KLogger('@kaus:DIProvider');
 
 type InstanceCollector = { [key: string]: any };
+export type ResolveDIModule = (instance: any) => void;
 
 export const DIProvider = {
   instanceCollector: {} as InstanceCollector,
   clazz: [] as Function[],
-  resolveDI: new Array<(instance: any) => void>(),
+  resolveDI: [] as ResolveDIModule[],
   resolveInstance: <T>(target: any): T => target as T,
   addToInstanceCollector: <T>(target: any, key?: string): T => target as T,
 };

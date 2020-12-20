@@ -13,9 +13,7 @@ export const Resolver = {
   RequestHandlerResolver: ((_restController: any, _requestHandler: RequestHandlerMapping, _requestParams: RequestHandlerParam[]) => {
     throw new Error('Method RequestHandlerResolver not implemented.');
   }) as RequestHandlerResolver,
-  Callback: (() => {
-    throw new Error('Method Callback not implemented.');
-  }) as ResolverCallback,
+  Callback: (() => {}) as ResolverCallback,
 };
 
 export async function resolveRestController() {

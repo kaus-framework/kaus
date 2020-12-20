@@ -78,13 +78,13 @@ export class ApplicationBootstrap {
     return Bluebird.resolve(dotenv.config())
       .then(() => this.loadPaths())
       .then(() => DIBootstrap.init())
-      .then(() => DIBootstrap.configure())
-      .then(() => InitFunctions())
       .then(async () =>
         Bluebird.resolve(bootstrapModules)
           .then((modules) => modules.sort((a, b) => a.index! - b.index!))
           .each((modules) => modules.bootstraper()),
-      );
+      )
+      .then(() => DIBootstrap.configure())
+      .then(() => InitFunctions());
   }
 
   private loadPaths() {

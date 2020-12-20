@@ -1,0 +1,17 @@
+{
+  "name": "@kaus/socket.io-integration",
+  "version": "0.0.0",
+  "author": "Juan Ibarra <ibarrajj@gmail.com>",
+  "private": true,
+  "scripts": {
+    "start": "node -r ts-node/register src/index.ts",
+    "dev": "node src/index.js",
+    "test": "mocha -r ts-node/register test/**/*.spec.ts"
+  },
+  "dependencies": {
+    "@kaus/core": "^0.0.0",
+    "@kaus/http": "^0.0.0",
+    "@kaus/socket.io": "^0.0.0",
+    "socket.io": "^3.0.4"
+  }
+}

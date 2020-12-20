@@ -26,4 +26,5 @@ Bootstrap.registerModule({
 
     createHttpServer(app);
   },
+  shutdown: () => log.info('shutdown express application'),
 });
