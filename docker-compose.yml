@@ -1,0 +1,14 @@
+version: '3.3'
+
+services:
+  postgres:
+    image: postgres:12
+    container_name: postgres-kaus
+    volumes:
+      - .data/postgresql-data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: kaus
+      POSTGRES_USER: kaus
+      POSTGRES_PASSWORD: kaus

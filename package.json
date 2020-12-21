@@ -8,6 +8,7 @@
     "reset": "lerna run clean && echo y | lerna clean && lerna bootstrap && lerna link && lerna run build",
     "clean:build": "lerna run clean && lerna run build"
   },
+  "homepage": "https://github.com/kaus-framework/kaus",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kaus-framework/kaus.git"
@@ -15,7 +16,6 @@
   "bugs": {
     "url": "https://github.com/kaus-framework/kaus/issues"
   },
-  "homepage": "https://github.com/kaus-framework/kaus",
   "dependencies": {
     "chai": "^4.2.0",
     "lerna": "^3.22.1",

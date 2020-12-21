@@ -17,8 +17,8 @@ type KausModule = {
   shutdown?: () => void;
 };
 
-const paths: Array<string> = [];
-const modulePaths: Array<string> = [];
+export const paths: Array<string> = [];
+export const modulePaths: Array<string> = [];
 const files: Array<string> = [];
 const bootstrapModules: Array<KausModule> = [];
 
@@ -66,7 +66,7 @@ export class ApplicationBootstrap {
               console.log();
               log.info(`${eventType.toUpperCase()} signal received.`);
               return await Bluebird.resolve(modules)
-                .map((module) => module.shutdown!())
+                .each((module) => module.shutdown!())
                 .then(() => {
                   log.info('Kaus Application Shutdown');
                 });
@@ -77,7 +77,7 @@ export class ApplicationBootstrap {
 
     return Bluebird.resolve(dotenv.config())
       .then(() => this.loadPaths())
-      .then(() => DIBootstrap.init())
+      .then(() => DIBootstrap.resolveInstances())
       .then(async () =>
         Bluebird.resolve(bootstrapModules)
           .then((modules) => modules.sort((a, b) => a.index! - b.index!))

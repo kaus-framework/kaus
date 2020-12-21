@@ -1,5 +1,5 @@
 {
-  "name": "@kaus/socket.io-integration",
+  "name": "@kaus/typeorm-integration",
   "version": "0.0.0",
   "author": "Juan Ibarra <ibarrajj@gmail.com>",
   "private": true,
@@ -9,8 +9,7 @@
   },
   "dependencies": {
     "@kaus/core": "^0.0.0",
-    "@kaus/http": "^0.0.0",
-    "@kaus/socket.io": "^0.0.0",
-    "socket.io": "^3.0.4"
+    "@kaus/typeorm": "^0.0.0",
+    "pg": "^8.5.1"
   }
 }

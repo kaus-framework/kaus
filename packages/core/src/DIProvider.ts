@@ -1,3 +1,4 @@
+import Bluebird from 'bluebird';
 import chalk from 'chalk';
 import { getDependencyInjections, hasDependencyInjection } from './decorators';
 import { KLogger } from './KLogger';
@@ -15,19 +16,39 @@ export const DIProvider = {
   resolveDI: [] as ResolveDIModule[],
   resolveInstance: <T>(target: any): T => target as T,
   addToInstanceCollector: <T>(target: any, key?: string): T => target as T,
+  getInstance: <T = any>(target: any): T | undefined => target as T,
 };
 
 export const DIBootstrap = {
-  init: () => DIProvider.clazz.forEach(DIProvider.resolveInstance),
-  resolveDependencyInjection: (instance: any) => DIProvider.resolveDI.forEach((resolveDI) => resolveDI(instance)),
-  configure: () => Object.values(DIProvider.instanceCollector).forEach(DIBootstrap.resolveDependencyInjection),
+  resolveInstances: () => DIProvider.clazz.forEach(DIProvider.resolveInstance),
+  resolveDependencyInjection: async (instance: any) =>
+    Bluebird.resolve(DIProvider.resolveDI)
+      .map((resolveDI) => resolveDI(instance))
+      .then(() => instance),
+  configure: async () => configureAllDI().then(() => configureAllDI()),
 };
+
+const metadata_di_configured: string = '__metadata:di_configured__';
+const configureAllDI = async () =>
+  Bluebird.resolve(Object.values(DIProvider.instanceCollector))
+    .filter((instance) => !Reflect.hasMetadata(metadata_di_configured, instance))
+    .each((instance) => DIBootstrap.resolveDependencyInjection(instance))
+    .each((instance) => Reflect.defineMetadata(metadata_di_configured, true, instance));
 
 DIProvider.addToInstanceCollector = (instance: any, key?: string) => {
   key = key ? key : getClassName(instance);
+  if (DIProvider.instanceCollector[key]) {
+    log.warn(`instance ${key} already exist, used other key`);
+    return DIProvider.instanceCollector[key];
+  }
   if (typeof instance.onInit === 'function') onInit.push(instance);
   DIProvider.instanceCollector[key] = instance;
   return instance;
+};
+
+DIProvider.getInstance = (instance: any) => {
+  const key = typeof instance === 'string' ? instance : getClassName(instance);
+  return DIProvider.instanceCollector[key];
 };
 
 DIProvider.resolveInstance = <T = any>(target: any): T => {
