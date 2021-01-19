@@ -29,13 +29,13 @@ export class ApplicationBootstrap {
 
   private registerModules() {
     const basepath = path.join(process.cwd(), 'node_modules', '@kaus');
-    fs.readdir(path.join(process.cwd(), 'node_modules', '@kaus'), (e, kausModules) => {
+    fs.readdir(basepath, (e, kausModules) =>
       kausModules.forEach((kausModule) => {
         const kausModulePath = path.join(basepath, kausModule);
         const kausPackageConfig: any = require(path.join(kausModulePath, 'package.json')).kaus;
         if (kausPackageConfig.registerPath) modulePaths.push(path.join(kausModulePath, kausPackageConfig.registerPath));
-      });
-    });
+      }),
+    );
   }
 
   registerPath(path: string, module: boolean = false) {
