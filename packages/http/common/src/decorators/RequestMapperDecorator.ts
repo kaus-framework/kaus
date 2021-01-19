@@ -45,7 +45,7 @@ function annotate(method: TypeRequestMethod, path: string, _target: any, propert
 }
 
 export function getRequestHandlerMappings(instance: any): RequestHandlerMapping[] {
-  return Reflect.getMetadata(metadata_request_mapping, instance.constructor) || [];
+  return (Reflect.getMetadata(metadata_request_mapping, instance.constructor) || []).sort((a: RequestHandlerMapping, b: RequestHandlerMapping) => b.path.length - a.path.length);
 }
 
 export function getRequestHandlerMapping(instance: any, propertyKey: string): RequestHandlerMapping {

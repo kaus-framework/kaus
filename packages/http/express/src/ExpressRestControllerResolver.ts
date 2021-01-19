@@ -1,5 +1,4 @@
-import { RequestHandlerMapping } from '@kaus/http/dist/decorators';
-import { RequestHandlerParam } from '@kaus/http/dist/RequestHandlersParam';
+import { TypeRequestMethod } from '@kaus/http';
 import { Resolver } from '@kaus/http/dist/RestControllerResolver';
 import Bluebird from 'bluebird';
 import { NextFunction, Request, Response, Router } from 'express';
@@ -7,17 +6,11 @@ import { app } from './Bootstrap';
 
 const collector: { [key: string]: Router } = {};
 
-Resolver.RestControllerResolver = async (restControllerPath: string, requestHandler: RequestHandlerMapping, handler: any) => {
-  if (!collector[restControllerPath]) collector[restControllerPath] = Router();
-  const router = collector[restControllerPath];
-  router[requestHandler.method](requestHandler.path, handler);
-};
-
-Resolver.RequestHandlerResolver = async (restController: any, requestHandler: RequestHandlerMapping, requestParams: RequestHandlerParam[]) => {
+Resolver.RequestHandlerResolver = async (requestHandler: (...params: any) => any, paramsExtractor: ((...params: any) => any)[]) => {
   return async (req: Request, res: Response, next: NextFunction) =>
-    Bluebird.resolve(requestParams)
-      .map((requestParam: RequestHandlerParam) => requestParam.extractor(req, res))
-      .then((params: any[]) => restController[requestHandler.propertyKey](...params))
+    Bluebird.resolve(paramsExtractor)
+      .map((extractor) => extractor(req, res))
+      .then((params: any[]) => requestHandler(...params))
       .then((response) => {
         if (res.headersSent) return;
         if (typeof response === 'undefined') return res.status(204).json();
@@ -27,6 +20,12 @@ Resolver.RequestHandlerResolver = async (restController: any, requestHandler: Re
       })
       .then(() => next())
       .catch(next);
+};
+
+Resolver.RestControllerResolver = async (method: TypeRequestMethod, controllerPath: string, path: string, handler: any) => {
+  if (!collector[controllerPath]) collector[controllerPath] = Router();
+  const router = collector[controllerPath];
+  router[method](path, handler);
 };
 
 Resolver.Callback = async () => {

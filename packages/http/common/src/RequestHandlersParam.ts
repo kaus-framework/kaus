@@ -40,5 +40,5 @@ export function RegisterRequestHandlerParam(bean: any, propertyKey: string | sym
 }
 
 export function getRequestHandlerParams(bean: any, propertyKey: string | symbol): RequestHandlerParam[] {
-  return Reflect.getMetadata(metadata_request_params, bean, propertyKey) || [];
+  return (Reflect.getMetadata(metadata_request_params, bean, propertyKey) || []).sort((s0: RequestHandlerParam, s1: RequestHandlerParam) => s0.index - s1.index);
 }

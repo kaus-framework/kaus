@@ -1,18 +1,19 @@
 import { DIProvider } from '@kaus/core';
 import Bluebird from 'bluebird';
-import { getRequestHandlerMappings, getRestControllerPath, isRestController, RequestHandlerMapping } from './decorators';
-import { getRequestHandlerParams, RequestHandlerParam } from './RequestHandlersParam';
+import { getRequestHandlerMappings, getRestControllerPath, isRestController, TypeRequestMethod } from './decorators';
+import { getRequestHandlerParams } from './RequestHandlersParam';
 
-export type RestControllerResolver = (restControllerPath: string, requestHandler: RequestHandlerMapping, handler: any) => any;
-export type RequestHandlerResolver = (restController: any, requestHandler: RequestHandlerMapping, requestParams: RequestHandlerParam[]) => any;
+export type RequestHandlerResolver = (controllerHanlder: (...params: any) => any, paramsExtractor: ((...params: any) => any)[]) => any;
+export type RestControllerResolver = (method: TypeRequestMethod, controllerPath: string, path: string, handler: any) => any;
 export type ResolverCallback = () => void;
+
 export const Resolver = {
-  RestControllerResolver: ((_restControllerPath: string, _requestHandler: RequestHandlerMapping, _handler: any) => {
-    throw new Error('Method RestControllerResolver not implemented.');
-  }) as RestControllerResolver,
-  RequestHandlerResolver: ((_restController: any, _requestHandler: RequestHandlerMapping, _requestParams: RequestHandlerParam[]) => {
+  RequestHandlerResolver: ((_controllerHanlder: any, _requestParams: any) => {
     throw new Error('Method RequestHandlerResolver not implemented.');
   }) as RequestHandlerResolver,
+  RestControllerResolver: ((_method: TypeRequestMethod, _controllerPath: string, _path: string, _handler: any) => {
+    throw new Error('Method RestControllerResolver not implemented.');
+  }) as RestControllerResolver,
   Callback: (() => {}) as ResolverCallback,
 };
 
@@ -21,13 +22,11 @@ export async function resolveRestController() {
     .filter((instance: any) => isRestController(instance))
     .each((restController: any) => {
       const restControllerPath: string = getRestControllerPath(restController);
-      return Bluebird.resolve(getRequestHandlerMappings(restController))
-        .then((requestHandlers: RequestHandlerMapping[]) => requestHandlers.sort((a: RequestHandlerMapping, b: RequestHandlerMapping) => b.path.length - a.path.length))
-        .each(async (requestHandler) => {
-          const requestParams = getRequestHandlerParams(restController, requestHandler.propertyKey).sort((s0, s1) => s0.index - s1.index);
-          const handler = await Resolver.RequestHandlerResolver(restController, requestHandler, requestParams);
-          return Resolver.RestControllerResolver(restControllerPath, requestHandler, handler);
-        });
+      return Bluebird.resolve(getRequestHandlerMappings(restController)).each(async (requestHandler) => {
+        const paramsExtractors = getRequestHandlerParams(restController, requestHandler.propertyKey).map((handler) => (...params: any) => handler.extractor(...params));
+        const handler = await Resolver.RequestHandlerResolver((...params: any) => restController[requestHandler.propertyKey](...params), paramsExtractors);
+        return Resolver.RestControllerResolver(requestHandler.method, restControllerPath, requestHandler.path, handler);
+      });
     })
     .then(() => Resolver.Callback());
 }
